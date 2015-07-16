@@ -39,7 +39,7 @@
                             {% set optgroup = item[groupby] %}
                             <optgroup label="{{ optgroup }}">
                         {% endif %}
-                        <option value="{{ item.id }}"{% if item.selected or selectedbyrelation %} selected{% endif %} data-order="{{getRelationOrder(item, context.content)}}">
+                        <option value="{{ item.id }}"{% if item.selected or selectedbyrelation %} selected{% endif %}>
                             {{ format|twig({'item': item}) }}
                         </option>
                     {% endfor %}
