@@ -25,10 +25,15 @@
                     <select name="relation[{{ relcontenttype }}][]" id="relation-{{ relcontenttype }}" class="wide" style="width: 100%;" data-placeholder="{{ __('(none)') }}">
                         <option value="0">{{ __('(none)') }}</option>
                 {% endif %}
+                    {% if relation.sortable|default(false) %}
+                        {% set iterationset =  relationSort(context.content.relation[relcontenttype], listcontent(relcontenttype, relation, context.content)) %}
+                    {% else %}
+                        {% set iterationset = listcontent(relcontenttype, relation, context.content) %}
+                    {% endif %}
 
                     {% set groupby = relation.groupby|default(false) %}
                     {% set optgroup = '' %}
-                    {% for item in listcontent(relcontenttype, relation, context.content) %}
+                    {% for item in iterationset %}
                         {% if relcontenttype == app.request.get('relation') and item.id == app.request.get('relationid') %}
                             {% set selectedbyrelation = true %}
                         {% else %}

@@ -29,7 +29,21 @@ class Extension extends BaseExtension
         
         $this->app['dispatcher']->addListener(\Bolt\Events\StorageEvents::POST_SAVE, array($this, 'saveRelationOrder'));
 
+        $this->addTwigFunction('relationSort', 'relationSort');
 
+
+    }
+    
+    public function relationSort($arr1, $arr2)
+    {
+        $merged = array_unique(array_merge($arr1, $arr2), SORT_REGULAR);
+        $compiled = [];
+        
+        foreach ($merged as $val) {
+            $compiled[$val[0]] = $val;
+        }
+        
+        return $compiled;
     }
     
     
