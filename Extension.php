@@ -36,11 +36,18 @@ class Extension extends BaseExtension
     
     public function relationSort($arr1, $arr2)
     {
-        $merged = array_unique(array_merge($arr1, $arr2), SORT_REGULAR);
-        $compiled = [];
-        
+        $index = [];
+        foreach ($arr2 as $key => $obj) {
+            $index[] = $key;
+        }
+        $compiled = [];        
         foreach ($arr1 as $val) {
-            $compiled[] = $arr2[$val];
+            $compiled[$val] = $arr2[$val];
+            unset($index[array_search($val, $index)]);
+        }
+        
+        foreach ($index as $val) {
+            $compiled[$val] = $arr2[$val];
         }
         
         return $compiled;
