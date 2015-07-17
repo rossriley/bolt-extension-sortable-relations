@@ -30,6 +30,7 @@ class Extension extends BaseExtension
         $this->app['dispatcher']->addListener(\Bolt\Events\StorageEvents::POST_SAVE, array($this, 'saveRelationOrder'));
 
         $this->addTwigFunction('relationSort', 'relationSort');
+        $this->addTwigFunction('getSortedRelations', 'getSortedRelations');
 
 
     }
@@ -51,6 +52,16 @@ class Extension extends BaseExtension
         }
         
         return $compiled;
+    }
+    
+    public function getSortedRelations($content, $relcontenttype)
+    {
+        $id = $content['id'];
+        
+        $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$relcontenttype' ORDER BY sort;"
+        $result = $this->app['db']->query($query);
+        
+        return $result;
     }
     
     
