@@ -43,8 +43,9 @@ class Extension extends BaseExtension
         }
         $compiled = [];        
         foreach ($arr1 as $val) {
-            $compiled[$val] = $arr2[$val];
-            unset($index[array_search($val, $index)]);
+            $relatedId = $val['to_id'];
+            $compiled[$relatedId] = $arr2[$relatedId];
+            unset($index[array_search($relatedId, $index)]);
         }
         
         foreach ($index as $val) {
