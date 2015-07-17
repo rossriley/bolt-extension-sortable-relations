@@ -59,7 +59,7 @@ class Extension extends BaseExtension
         $id = $content['id'];
         
         $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$relcontenttype' ORDER BY sort;";
-        $result = $this->app['db']->query($query);
+        $result = $this->app['db']->fetchAll($query);
         
         return $result;
     }
