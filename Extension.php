@@ -24,8 +24,11 @@ class Extension extends BaseExtension
         );
         
         $check = $this->app['integritychecker']->checkTablesIntegrity();
-        $this->addCss('assets/select2.sortable.css', 1);
-        $this->addJavascript('assets/select2.sortable.min.js', 1);
+        
+        if ($this->app['config']->getWhichEnd() == 'backend') {
+            $this->addCss('assets/select2.sortable.css', 1);
+            $this->addJavascript('assets/select2.sortable.min.js', 1);
+        }
         
         $this->app['dispatcher']->addListener(\Bolt\Events\StorageEvents::POST_SAVE, array($this, 'saveRelationOrder'));
 
