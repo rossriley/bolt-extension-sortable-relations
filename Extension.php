@@ -34,7 +34,7 @@ class Extension extends BaseExtension
 
         $this->addTwigFunction('relationSort', 'relationSort');
         $this->addTwigFunction('getSortedRelations', 'getSortedRelations');
-
+        $this->addTwigFunction('getSortedRelated', 'getSortedRelated');
 
     }
     
@@ -68,6 +68,29 @@ class Extension extends BaseExtension
         return $result;
     }
     
+    public function getSortedRelated($content, $relcontenttype)
+    {
+        $id = $content['id'];
+        
+        $query = "SELECT * from bolt_relations WHERE from_id=$id AND to_contenttype='$relcontenttype' ORDER BY sort;";
+        $result = $this->app['db']->fetchAll($query);
+        
+        $arr2 = $content->related();
+        $arr1 = $result;
+        
+        $index = [];
+        foreach ($arr2 as $key => $obj) {
+            $index[] = $obj->id;
+        }
+        $compiled = [];        
+        foreach ($arr1 as $val) {
+            $relatedId = $val['to_id'];
+            $compiled[] = $arr2[array_search($relatedId, $index)];
+        }
+        
+        
+        return $compiled;
+    }
     
     public function saveRelationOrder($event)
     {
