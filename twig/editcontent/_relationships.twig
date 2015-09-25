@@ -26,7 +26,7 @@
                         <option value="0">{{ __('(none)') }}</option>
                 {% endif %}
                     {% if relation.sortable|default(false) %}
-                        {% set sortedRelations = getSortedRelations(context.content, relcontenttype) %}
+                        {% set sortedRelations = getSortedRelations(context.content, context.content.contenttype.slug) %}
                         {% set iterationset =  relationSort(sortedRelations, listcontent(relcontenttype, relation, context.content)) %}
                     {% else %}
                         {% set iterationset = listcontent(relcontenttype, relation, context.content) %}
