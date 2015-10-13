@@ -63,7 +63,9 @@ class Extension extends BaseExtension
         if (isset($content['id'])) {
             $id = $content['id'];
             
-            $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$relcontenttype' ORDER BY sort;";
+            $fromcontenttype = $content->contenttype['slug'];
+            
+            $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$fromcontenttype' AND to_contenttype='$relcontenttype' ORDER BY sort;";
             $result = $this->app['db']->fetchAll($query);
             
             return $result;
@@ -77,7 +79,9 @@ class Extension extends BaseExtension
         if(isset($content['id'])){
             $id = $content['id'];
             
-            $query = "SELECT * from bolt_relations WHERE from_id=$id AND to_contenttype='$relcontenttype' ORDER BY sort;";
+            $fromcontenttype = $content->contenttype['slug'];
+            
+            $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$fromcontenttype' AND to_contenttype='$relcontenttype' ORDER BY sort;";
             $result = $this->app['db']->fetchAll($query);
             
             $arr2 = $content->related();
