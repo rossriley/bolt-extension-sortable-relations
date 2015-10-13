@@ -60,36 +60,47 @@ class Extension extends BaseExtension
     
     public function getSortedRelations($content, $relcontenttype)
     {
-        $id = $content['id'];
-        
-        $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$relcontenttype' ORDER BY sort;";
-        $result = $this->app['db']->fetchAll($query);
-        
-        return $result;
+        if (isset($content['id'])) {
+            $id = $content['id'];
+            
+            $fromcontenttype = $content->contenttype['slug'];
+            
+            $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$fromcontenttype' AND to_contenttype='$relcontenttype' ORDER BY sort;";
+            $result = $this->app['db']->fetchAll($query);
+            
+            return $result;
+        } else {
+            return [];
+        }
     }
     
     public function getSortedRelated($content, $relcontenttype)
     {
-        $id = $content['id'];
-        
-        $query = "SELECT * from bolt_relations WHERE from_id=$id AND to_contenttype='$relcontenttype' ORDER BY sort;";
-        $result = $this->app['db']->fetchAll($query);
-        
-        $arr2 = $content->related();
-        $arr1 = $result;
-        
-        $index = [];
-        foreach ($arr2 as $key => $obj) {
-            $index[] = $obj->id;
+        if(isset($content['id'])){
+            $id = $content['id'];
+            
+            $fromcontenttype = $content->contenttype['slug'];
+            
+            $query = "SELECT * from bolt_relations WHERE from_id=$id AND from_contenttype='$fromcontenttype' AND to_contenttype='$relcontenttype' ORDER BY sort;";
+            $result = $this->app['db']->fetchAll($query);
+            
+            $arr2 = $content->related();
+            $arr1 = $result;
+            
+            $index = [];
+            foreach ($arr2 as $key => $obj) {
+                $index[] = $obj->id;
+            }
+            $compiled = [];        
+            foreach ($arr1 as $val) {
+                $relatedId = $val['to_id'];
+                $compiled[] = $arr2[array_search($relatedId, $index)];
+            }
+            
+            return $compiled;
+        } else {
+            return [];
         }
-        $compiled = [];        
-        foreach ($arr1 as $val) {
-            $relatedId = $val['to_id'];
-            $compiled[] = $arr2[array_search($relatedId, $index)];
-        }
-        
-        
-        return $compiled;
     }
     
     public function saveRelationOrder($event)
